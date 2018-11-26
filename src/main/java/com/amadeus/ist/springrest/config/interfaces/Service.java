@@ -10,4 +10,10 @@ public interface Service<T> {
                 .filter(predicate)
                 .collect(Collectors.toList());
     }
+
+    default List<T> sort(List<T> list) {
+        return list.stream()
+                .sorted()
+                .collect(Collectors.toList());
+    }
 }

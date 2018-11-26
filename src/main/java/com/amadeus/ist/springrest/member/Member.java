@@ -1,26 +1,33 @@
 package com.amadeus.ist.springrest.member;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotNull;
+
+@Document(collection = "members")
+@JsonDeserialize(builder = Member.MemberBuilder.class)
 public final class Member {
+
+    @Id
+    @NotNull
     private final String flyerID;
+    @NotNull
     private final String name;
+    @NotNull
     private final String lastname;
     private final int flyerPoints;
     private final String status;
 
-    @JsonCreator
-    public Member(@JsonProperty(value = "flyerID", required = true) String flyerID,
-                  @JsonProperty(value = "name", required = true) String name,
-                  @JsonProperty(value = "lastname", required = true) String lastname,
-                  @JsonProperty(value = "flyerPoints", required = true) int flyerPoints,
-                  @JsonProperty(value = "status", required = true)String status) {
-        this.flyerID = flyerID;
-        this.name = name;
-        this.lastname = lastname;
-        this.flyerPoints = flyerPoints;
-        this.status = status;
+    public Member(MemberBuilder builder) {
+        this.flyerID = builder.flyerID;
+        this.name = builder.name;
+        this.lastname = builder.lastname;
+        this.flyerPoints = builder.flyerPoints;
+        this.status = builder.status;
     }
 
     public String getFlyerID() {
@@ -52,10 +59,7 @@ public final class Member {
         if (this.getClass() != o.getClass())
             return false;
         Member m = (Member) o;
-        if (!this.flyerID.equals(m.getFlyerID()))
-            return false;
-
-        return true;
+        return this.flyerID.equals(m.getFlyerID());
     }
 
     @Override
@@ -64,6 +68,7 @@ public final class Member {
         int hash = 11;
         hash = 31 * hash + Integer.parseInt(flyerID);
         hash = 31 * hash + (name == null ? 0 : name.hashCode());
+        hash = 31 * hash + (lastname == null ? 0 : lastname.hashCode());
         return hash;
     }
 
@@ -72,4 +77,57 @@ public final class Member {
         return "Member information: " + this.flyerID + " " + this.name + " " + this.lastname + " " + this.flyerPoints;
     }
 
+    public MemberDTO toConvertMemberDTO() {
+        MemberDTO memberDTO = new MemberDTO(new ObjectId(), this.flyerID, this.name, this.lastname, this.flyerPoints, this.status);
+        return memberDTO;
+
+    }
+
+    @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "set")
+    public static class MemberBuilder {
+        private String flyerID;
+        private String name;
+        private String lastname;
+        private int flyerPoints;
+        private String status;
+
+        // factory method used fo preventing this reference to be escaped.
+        public static MemberBuilder newInstance() {
+            return new MemberBuilder();
+        }
+
+        private MemberBuilder() {
+        }
+
+        public MemberBuilder setFlyerID(String flyerID) {
+            if (flyerID.length() != 13)
+                throw new IllegalArgumentException("FlyerID must contain 13 digits");
+            this.flyerID = flyerID;
+            return this;
+        }
+
+        public MemberBuilder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public MemberBuilder setLastname(String lastname) {
+            this.lastname = lastname;
+            return this;
+        }
+
+        public MemberBuilder setFlyerPoints(int flyerPoints) {
+            this.flyerPoints = flyerPoints;
+            return this;
+        }
+
+        public MemberBuilder setStatus(String status) {
+            this.status = status;
+            return this;
+        }
+
+        public Member build() {
+            return new Member(this);
+        }
+    }
 }

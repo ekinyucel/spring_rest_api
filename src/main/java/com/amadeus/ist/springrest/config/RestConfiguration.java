@@ -1,18 +1,31 @@
 package com.amadeus.ist.springrest.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.core.convert.DbRefResolver;
+import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
+import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
 @Configuration
-@ConfigurationProperties("application")
 public class RestConfiguration {
-    /*@Value("${application.server.port}")
-    public int portNumber;
+    @Value("${spring.data.mongodb.database}")
+    private String databaseName;
 
-    public int getPortNumber() {
-        return portNumber;
+    @Autowired
+    MongoDbFactory mongoDbFactory;
+    @Autowired
+    MongoMappingContext mongoMappingContext;
+
+    @Bean
+    public MappingMongoConverter mappingMongoConverter() {
+        DbRefResolver dbRefResolver = new DefaultDbRefResolver(mongoDbFactory);
+        MappingMongoConverter converter = new MappingMongoConverter(dbRefResolver, mongoMappingContext);
+        converter.setTypeMapper(new DefaultMongoTypeMapper(null));
+        return converter;
     }
-    public void setPortNumber(int portNumber) {
-        this.portNumber = portNumber;
-    }*/
 }
