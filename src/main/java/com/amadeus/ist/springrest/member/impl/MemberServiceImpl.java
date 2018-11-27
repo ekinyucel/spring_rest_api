@@ -5,6 +5,8 @@ import com.amadeus.ist.springrest.member.MemberDTO;
 import com.amadeus.ist.springrest.member.MemberRepository;
 import com.amadeus.ist.springrest.member.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,14 +23,7 @@ class MemberServiceImpl implements MemberService {
     private MemberRepository memberRepository;
 
     public MemberServiceImpl(){
-        /*Member member = Member.MemberBuilder.newInstance()
-                .setObjectId(new ObjectId("5bfb0d500000000000000000")).setFlyerID("1000004587456").setName("Ali").setLastname("Veli").setFlyerPoints(400).setStatus("AC").build();
-        Member member2 = Member.MemberBuilder.newInstance()
-                .setObjectId(new ObjectId("5bfb0d500000000000000000")).setFlyerID("1000009561558").setName("Mehmet").setLastname("Yeter").setFlyerPoints(800).setStatus("IA").build();
-        */
         memberList = new CopyOnWriteArrayList<>();
-        /*memberList.add(member);
-        memberList.add(member2);*/
     }
 
     @Override
@@ -40,7 +35,9 @@ class MemberServiceImpl implements MemberService {
     @Override
     public List<Member> retrieveMember(String flyerID) {
         if (!flyerID.equals(null)) {
-            return memberRepository.retrieveMember(flyerID).stream()
+            Query query = new Query();
+            query.addCriteria(Criteria.where("flyerID").is(flyerID));
+            return memberRepository.retrieveMember(query).stream()
                     .map(MemberDTO::toConvertMember)
                     .collect(Collectors.toList());
         }
@@ -67,8 +64,8 @@ class MemberServiceImpl implements MemberService {
         if (filter(memberList, searchPredicate) == null)
             return false;
 
-        memberList.removeIf(m -> m.getFlyerID().equals(member.getFlyerID()));
-        memberList.add(member);
+        // TODO change the logic
+        memberRepository.save(member.toConvertMemberDTO());
         return true;
     }
 
@@ -76,11 +73,17 @@ class MemberServiceImpl implements MemberService {
     public boolean deleteMember(String flyerID) {
         if (flyerID.equals(null))
             return false;
-        searchPredicate = member -> member.getFlyerID().equals(flyerID);
-        if (filter(memberList, searchPredicate) == null)
-            return false;
 
-        memberList.removeIf(member -> member.getFlyerID().equals(flyerID));
+        Query query = new Query();
+        query.addCriteria(Criteria.where("flyerID").is(flyerID));
+
+        // TODO change the logic of checking whether member exist or nut
+        /*searchPredicate = member -> member.getFlyerID().equals(flyerID);
+        if (filter(memberList, searchPredicate) == null)
+            return false;*/
+
+        System.out.println("test: deleteresult of removal - " + memberRepository.deleteMember(query));
+        memberRepository.deleteMember(query);
 
         return true;
     }
