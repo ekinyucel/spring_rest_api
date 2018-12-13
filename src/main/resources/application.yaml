@@ -4,5 +4,7 @@ spring:
     port: 27017
     database: airline
 
+logging.level.org.springframework.data.mongodb: DEBUG
+
 server:
   port: 8090

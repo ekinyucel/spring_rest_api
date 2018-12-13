@@ -77,7 +77,7 @@ class MemberServiceImpl implements MemberService {
         Query query = new Query();
         query.addCriteria(Criteria.where("flyerID").is(flyerID));
 
-        // TODO change the logic of checking whether member exist or nut
+        // TODO change the logic of checking whether member exist or not
         /*searchPredicate = member -> member.getFlyerID().equals(flyerID);
         if (filter(memberList, searchPredicate) == null)
             return false;*/
