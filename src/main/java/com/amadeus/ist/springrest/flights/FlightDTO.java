@@ -1,47 +1,49 @@
 package com.amadeus.ist.springrest.flights;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Objects;
 
 @Document(collection = "full_passenger_list")
 public class FlightDTO {
     @Id
-    @JsonProperty("_id")
     public ObjectId _id;
 
-    @JsonProperty("FPL_SEQ")
+    @Field("FPL_SEQ")
     private final int fplSEQ;
 
-    @JsonProperty("FLT_DATE")
+    @Field("FLT_DATE")
     private final String flightDate;
 
-    @JsonProperty("FLYER_ID")
+    @Field("FLYER_ID")
     private final String flyerId;
 
-    @JsonProperty("PNR")
+    @Field("PNR")
     private final String PNR;
 
-    @JsonProperty("FLT_NUMBER")
+    @Field("FLT_NUMBER")
     private final String flightNumber;
 
-    @JsonProperty("FLT_CLASS")
+    @Field("FLT_CLASS")
     private final String flightClass;
 
-    @JsonProperty("COMPANY")
+    @Field("COMPANY")
     private final String company;
 
-    @JsonProperty("ORIGIN")
+    @Field("ORIGIN")
     private final String origin;
 
-    @JsonProperty("DESTINATION")
-    private final String destination;
+    @Field("DESTINATION")
+    private String destination;
 
-    public FlightDTO(ObjectId _id, int fplSEQ, String flightDate, String flyerId, String PNR, String flightNumber, String flightClass,
-                     String company, String origin, String destination) {
+    @Field("STATUS")
+    private String status;
+
+    public FlightDTO(ObjectId _id, Integer fplSEQ, String flightDate, String flyerId, String PNR, String flightNumber, String flightClass,
+                     String company, String origin, String destination, String status) {
         this._id = _id;
         this.fplSEQ = fplSEQ;
         this.flightDate = flightDate;
@@ -52,6 +54,7 @@ public class FlightDTO {
         this.company = company;
         this.origin = origin;
         this.destination = destination;
+        this.status = status;
     }
 
     public ObjectId get_id() {
@@ -94,6 +97,10 @@ public class FlightDTO {
         return destination;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -123,7 +130,14 @@ public class FlightDTO {
                 .setFlightClass(this.flightClass)
                 .setCompany(this.company)
                 .setOrigin(this.origin)
-                .setDestination(this.destination).build();
+                .setDestination(this.destination)
+                .setStatus(this.status).build();
+
         return member;
+    }
+
+    @Override
+    public String toString() {
+        return "Flight DTO information: " + this.flyerId + " " + this.flightNumber + " " + this.origin + " " + this.destination + " " + this.flightDate;
     }
 }

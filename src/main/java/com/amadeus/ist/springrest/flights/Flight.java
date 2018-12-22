@@ -1,29 +1,49 @@
 package com.amadeus.ist.springrest.flights;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Objects;
 
-@Document(collection = "full_passenger_list")
 @JsonDeserialize(builder = Flight.FlightBuilder.class)
 public final class Flight {
 
     @Id
-    private int fplSEQ;
+    @JsonProperty("fplSeq")
+    private final int fplSEQ;
+
+    @JsonProperty("flightDate")
     private final String flightDate;
+
+    @JsonProperty("flyerID")
     private final String flyerId;
+
+    @JsonProperty("pnr")
     private final String PNR;
+
+    @JsonProperty("flightNumber")
     private final String flightNumber;
+
+    @JsonProperty("flightClass")
     private final String flightClass;
+
+    @JsonProperty("company")
     private final String company;
+
+    @JsonProperty("origin")
     private final String origin;
+
+    @JsonProperty("destination")
     private final String destination;
 
+    @JsonProperty("status")
+    private final String status;
+
     public Flight(FlightBuilder builder) {
+        this.fplSEQ = builder.fplSEQ;
         this.flightDate = builder.flightDate;
         this.flyerId = builder.flyerId;
         this.PNR = builder.PNR;
@@ -32,6 +52,7 @@ public final class Flight {
         this.company = builder.company;
         this.origin = builder.origin;
         this.destination = builder.destination;
+        this.status = builder.status;
     }
 
     public int getFplSEQ() {
@@ -70,6 +91,10 @@ public final class Flight {
         return destination;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -93,11 +118,10 @@ public final class Flight {
 
     public FlightDTO toConvertFlightDTO() {
         FlightDTO memberDTO = new FlightDTO(new ObjectId(), this.fplSEQ, this.flightDate, this.flyerId, this.PNR, this.flightNumber
-                , this.flightClass, this.company, this.origin, this.destination);
+                , this.flightClass, this.company, this.origin, this.destination, this.status);
         return memberDTO;
 
     }
-
 
     @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "set")
     public static class FlightBuilder {
@@ -110,6 +134,7 @@ public final class Flight {
         private String company;
         private String origin;
         private String destination;
+        private String status;
 
         // factory method used fo preventing this reference to be escaped.
         public static FlightBuilder newInstance() {
@@ -125,24 +150,16 @@ public final class Flight {
         }
 
         public FlightBuilder setFlightDate(String flightDate) {
-            if (flightDate.equals(null))
-                throw new IllegalArgumentException("Flight Date must be filled");
             this.flightDate = flightDate;
             return this;
         }
 
         public FlightBuilder setFlyerID(String flyerID) {
-            if (flyerID.equals(null))
-                throw new IllegalArgumentException("FlyerID shall be entered");
-            if (flyerID.length() != 13)
-                throw new IllegalArgumentException("FlyerID must contain 13 digits");
             this.flyerId = flyerID;
             return this;
         }
 
         public FlightBuilder setPNR(String PNR) {
-            if (PNR.equals(null))
-                throw new IllegalArgumentException("PNR must be filled");
             this.PNR = PNR;
             return this;
         }
@@ -169,6 +186,11 @@ public final class Flight {
 
         public FlightBuilder setDestination(String destination) {
             this.destination = destination;
+            return this;
+        }
+
+        public FlightBuilder setStatus(String status) {
+            this.status = status;
             return this;
         }
 

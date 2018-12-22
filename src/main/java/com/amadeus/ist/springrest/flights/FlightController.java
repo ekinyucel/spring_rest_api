@@ -1,14 +1,12 @@
 package com.amadeus.ist.springrest.flights;
 
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -20,12 +18,12 @@ public class FlightController {
     @Autowired
     private FlightService flightService;
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @Async
-    @RequestMapping(value = "/retrieveFlights/{flightDate}", method = RequestMethod.GET)
-    public CompletableFuture<ResponseEntity<List<Flight>>> retrieveFlights(@PathVariable final String flightDate) {
-        logger.info("flight date " + flightDate);
+    @RequestMapping(value = "/flights", method = RequestMethod.GET)
+    public CompletableFuture<ResponseEntity<List<Document>>> retrieveFlights(@RequestParam(value = "date") final String date) {
         return CompletableFuture.supplyAsync(
-                () -> flightService.retrieveFlights(flightDate))
+                () -> flightService.retrieveFlightNumbers(date))
                 .handle((result, ex) -> {
                     if (ex != null) {
                         ex.getCause();
