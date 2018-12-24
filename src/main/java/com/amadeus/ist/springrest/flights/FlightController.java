@@ -12,18 +12,37 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class FlightController {
     private static final Logger logger = LoggerFactory.getLogger(FlightController.class);
 
-    @Autowired
-    private FlightService flightService;
+    private final FlightService flightService;
 
-    @CrossOrigin(origins = "http://localhost:4200")
+    @Autowired
+    public FlightController(FlightService flightService) {
+        this.flightService = flightService;
+    }
+
     @Async
     @RequestMapping(value = "/flights", method = RequestMethod.GET)
     public CompletableFuture<ResponseEntity<List<Document>>> retrieveFlights(@RequestParam(value = "date") final String date) {
         return CompletableFuture.supplyAsync(
                 () -> flightService.retrieveFlightNumbers(date))
+                .handle((result, ex) -> {
+                    if (ex != null) {
+                        ex.getCause();
+                        logger.info(ex.getMessage());
+                    }
+                    return ResponseEntity.ok(result);
+                });
+    }
+
+    @Async
+    @RequestMapping(value = "/flightDetails", method = RequestMethod.GET)
+    public CompletableFuture<ResponseEntity<List<Document>>> retrievePassengerDetails(@RequestParam(value = "date") final String date,
+                                                                                      @RequestParam(value = "fltNumber") final String flightNumber) {
+        return CompletableFuture.supplyAsync(
+                () -> flightService.retrievePassengerDetails(date, flightNumber))
                 .handle((result, ex) -> {
                     if (ex != null) {
                         ex.getCause();

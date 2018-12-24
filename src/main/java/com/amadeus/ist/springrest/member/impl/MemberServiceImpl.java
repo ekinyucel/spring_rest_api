@@ -19,11 +19,12 @@ class MemberServiceImpl implements MemberService {
     private final List<Member> memberList;
     private Predicate<Member> searchPredicate;
 
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-    public MemberServiceImpl(){
+    @Autowired
+    public MemberServiceImpl(MemberRepository memberRepository) {
         memberList = new CopyOnWriteArrayList<>();
+        this.memberRepository = memberRepository;
     }
 
     @Override

@@ -16,10 +16,14 @@ public class RestConfiguration {
     @Value("${spring.data.mongodb.database}")
     private String databaseName;
 
+    private final MongoDbFactory mongoDbFactory;
+    private final MongoMappingContext mongoMappingContext;
+
     @Autowired
-    MongoDbFactory mongoDbFactory;
-    @Autowired
-    MongoMappingContext mongoMappingContext;
+    public RestConfiguration(MongoDbFactory mongoDbFactory, MongoMappingContext mongoMappingContext) {
+        this.mongoDbFactory = mongoDbFactory;
+        this.mongoMappingContext = mongoMappingContext;
+    }
 
     @Bean
     public MappingMongoConverter mappingMongoConverter() {

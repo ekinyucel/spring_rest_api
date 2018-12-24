@@ -10,10 +10,7 @@ class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public boolean authenticate(Authentication authentication) {
         //TODO implement a proper authentication logic
-        if (authentication.getEmail().equals("admin@admin.com") &&
-                authentication.getPassword().equals("1234")) {
-            return true;
-        }
-        return false;
+        return authentication.getEmail().equals("admin@admin.com") &&
+                authentication.getPassword().equals("1234");
     }
 }

@@ -16,9 +16,13 @@ import java.util.concurrent.atomic.AtomicLong;
 class MemberController {
     private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
-    @Autowired
-    private MemberService memberService;
+    private final MemberService memberService;
     private final AtomicLong counter = new AtomicLong(0);
+
+    @Autowired
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
 
     @Async
     @RequestMapping(value = "/retrieveMembers", method = RequestMethod.GET)
@@ -72,7 +76,7 @@ class MemberController {
 
         return CompletableFuture.supplyAsync(
                 () -> memberService.enrollMember(member))
-                .thenApply(response -> ResponseEntity.ok((response == true) ? true : false));
+                .thenApply(response -> ResponseEntity.ok(response));
     }
 
     @Async
