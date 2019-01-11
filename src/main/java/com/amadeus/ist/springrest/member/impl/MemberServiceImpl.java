@@ -35,7 +35,7 @@ class MemberServiceImpl implements MemberService {
 
     @Override
     public List<Member> retrieveMember(String flyerID) {
-        if (!flyerID.equals(null)) {
+        if (!flyerID.isEmpty()) {
             Query query = new Query();
             query.addCriteria(Criteria.where("flyerID").is(flyerID));
             return memberRepository.retrieveMember(query).stream()
@@ -72,16 +72,16 @@ class MemberServiceImpl implements MemberService {
 
     @Override
     public boolean deleteMember(String flyerID) {
-        if (flyerID.equals(null))
+        if (flyerID.isEmpty())
             return false;
 
         Query query = new Query();
         query.addCriteria(Criteria.where("flyerID").is(flyerID));
 
         // TODO change the logic of checking whether member exist or not
-        /*searchPredicate = member -> member.getFlyerID().equals(flyerID);
-        if (filter(memberList, searchPredicate) == null)
-            return false;*/
+        // searchPredicate = member -> member.getFlyerID().equals(flyerID);
+        // if (filter(memberList, searchPredicate) == null)
+        //    return false;
 
         System.out.println("test: deleteresult of removal - " + memberRepository.deleteMember(query));
         memberRepository.deleteMember(query);

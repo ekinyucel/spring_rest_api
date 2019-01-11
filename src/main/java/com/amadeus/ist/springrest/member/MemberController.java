@@ -15,6 +15,8 @@ import java.util.concurrent.atomic.AtomicLong;
 @RestController
 class MemberController {
     private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
+    private static final String REQUEST_ID = "Request ID {} ";
+    private static final String THREAD_ID = "Thread ID {}  \n";
 
     private final MemberService memberService;
     private final AtomicLong counter = new AtomicLong(0);
@@ -28,18 +30,18 @@ class MemberController {
     @RequestMapping(value = "/retrieveMembers", method = RequestMethod.GET)
     public CompletableFuture<ResponseEntity<List<Member>>> retrieveMembers() {
         long threadId = Thread.currentThread().getId();
-        logger.info("Thread ID: " + threadId + " Request ID " + counter.incrementAndGet());
+        logger.info("Thread ID {} Request ID {} ", threadId, counter.incrementAndGet());
         long startTime = System.nanoTime();
 
         return CompletableFuture.supplyAsync(
-                () -> memberService.retrieveMembers())
+                memberService::retrieveMembers)
                 .handle((result, ex) -> {
                     if (ex != null) {
                         ex.getCause();
                         logger.info(ex.getMessage());
                     }
                     long endTime = System.nanoTime();
-                    logger.info("Thread ID: " + threadId + " total time " + (endTime - startTime) / 1e6);
+                    logger.info("Thread ID: {} total time {} ", threadId, (endTime - startTime) / 1e6);
                     return ResponseEntity.ok(result);
                 });
     }
@@ -48,10 +50,10 @@ class MemberController {
     @RequestMapping(value = "/retrieveMember/{flyerID}", method = RequestMethod.GET)
     public CompletableFuture<ResponseEntity<List<Member>>> retrieveMember(@PathVariable final String flyerID) {
         long threadId = Thread.currentThread().getId();
-        logger.info("Thread ID: " + threadId + " Request ID " + counter.incrementAndGet());
+        logger.info(REQUEST_ID, counter.incrementAndGet());
         long startTime = System.nanoTime();
 
-        logger.info("Thread ID " + threadId + "\n");
+        logger.info(THREAD_ID, Thread.currentThread().getId());
 
         return CompletableFuture.supplyAsync(
                 () -> memberService.retrieveMember(flyerID))
@@ -62,7 +64,7 @@ class MemberController {
                         return null;
                     }
                     long endTime = System.nanoTime();
-                    logger.info("Thread ID: " + threadId + " total time " + (endTime - startTime) / 1e6);
+                    logger.info("Thread ID: {} total time {} ", threadId, (endTime - startTime) / 1e6);
                     return ResponseEntity.ok(result);
                 });
     }
@@ -70,21 +72,21 @@ class MemberController {
     @Async
     @PostMapping("/enrollMember")
     public CompletableFuture<ResponseEntity<Boolean>> enrollMember(@RequestBody Member member, @RequestHeader HttpHeaders headers) {
-        long threadId = Thread.currentThread().getId();
-        logger.info("Thread ID: " + threadId + " Request ID " + counter.incrementAndGet());
-        logger.info("Thread ID " + Thread.currentThread().getId() + "\n");
+        logger.info(REQUEST_ID, counter.incrementAndGet());
+        logger.info(THREAD_ID, Thread.currentThread().getId());
 
         return CompletableFuture.supplyAsync(
                 () -> memberService.enrollMember(member))
-                .thenApply(response -> ResponseEntity.ok(response));
+                .thenApply(ResponseEntity::ok);
     }
 
+    @SuppressWarnings("Duplicates")
     @Async
     @PutMapping("/updateMember")
     public CompletableFuture<ResponseEntity<Boolean>> updateMember(@RequestBody Member member) {
         long threadId = Thread.currentThread().getId();
-        logger.info("Request ID " + counter.incrementAndGet());
-        logger.info("Thread ID " + Thread.currentThread().getId() + "\n");
+        logger.info(REQUEST_ID, counter.incrementAndGet());
+        logger.info(THREAD_ID, Thread.currentThread().getId());
         long startTime = System.nanoTime();
 
         return CompletableFuture.supplyAsync(
@@ -97,8 +99,8 @@ class MemberController {
                     }
                     if (result) {
                         long endTime = System.nanoTime();
-                        logger.info("Thread ID: " + threadId + " total time " + (endTime - startTime) / 1e6);
-                        return ResponseEntity.ok(result);
+                        logger.info("Thread ID: {} total time {} ", threadId, (endTime - startTime) / 1e6);
+                        return ResponseEntity.ok(true);
 
                     } else {
                         return null;
@@ -106,12 +108,13 @@ class MemberController {
                 });
     }
 
+    @SuppressWarnings("Duplicates")
     @Async
     @RequestMapping(value = "/deleteMember/{flyerID}", method = RequestMethod.DELETE)
     public CompletableFuture<ResponseEntity<Boolean>> deleteMember(@PathVariable final String flyerID) {
         long threadId = Thread.currentThread().getId();
-        logger.info("Request ID " + counter.incrementAndGet());
-        logger.info("Thread ID " + Thread.currentThread().getId() + "\n");
+        logger.info(REQUEST_ID, counter.incrementAndGet());
+        logger.info(THREAD_ID, Thread.currentThread().getId());
         long startTime = System.nanoTime();
 
         return CompletableFuture.supplyAsync(
@@ -124,8 +127,8 @@ class MemberController {
                     }
                     if (result) {
                         long endTime = System.nanoTime();
-                        logger.info("Thread ID: " + threadId + " total time " + (endTime - startTime) / 1e6);
-                        return ResponseEntity.ok(result);
+                        logger.info("Thread ID: {} total time {} ", threadId, (endTime - startTime) / 1e6);
+                        return ResponseEntity.ok(true);
 
                     } else {
                         return null;

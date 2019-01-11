@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Commons {
+    private Commons() {}
+
     public static List<String> getFieldNames(Field[] fields) {
         List<String> fieldNames = new ArrayList<>();
         for (Field field : fields)

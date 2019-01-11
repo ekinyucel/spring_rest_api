@@ -32,7 +32,7 @@ class FlightServiceImpl implements FlightService {
     @Override
     public List<Document> retrievePassengerDetails(String flightDate, String flightNumber) {
         // TODO: add better parameter control before passing them through the service.
-        if (!flightDate.equals(null) && !flightNumber.equals(null)) {
+        if (!flightDate.isEmpty() && !flightNumber.isEmpty()) {
             MatchOperation matchDate = Aggregation.match(new Criteria("FLT_DATE").is(flightDate));
             MatchOperation matchFlightNumber = Aggregation.match(new Criteria("FLT_NUMBER").is(flightNumber));
             ProjectionOperation omittingFields = Aggregation.project().andExclude("_id");

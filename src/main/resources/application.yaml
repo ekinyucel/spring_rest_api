@@ -1,10 +1,17 @@
+server:
+  port: 8090
+
 spring:
   data.mongodb:
     host: localhost
     port: 27017
     database: airline
 
-logging.level.org.springframework.data.mongodb: DEBUG
+# actuator endpoint configurations
+management:
+  endpoint:
+    health:
+      show-details: always
 
-server:
-  port: 8090
+logging.level.org.springframework.data.mongodb: DEBUG
+logging.level.org.springframework.boot.autoconfigure: ERROR

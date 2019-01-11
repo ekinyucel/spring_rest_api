@@ -24,7 +24,7 @@ public class FlightController {
     }
 
     @Async
-    @RequestMapping(value = "/flights", method = RequestMethod.GET)
+    @GetMapping(value = "/flights")
     public CompletableFuture<ResponseEntity<List<Document>>> retrieveFlights(@RequestParam(value = "date") final String date) {
         return CompletableFuture.supplyAsync(
                 () -> flightService.retrieveFlightNumbers(date))
@@ -38,7 +38,7 @@ public class FlightController {
     }
 
     @Async
-    @RequestMapping(value = "/flightDetails", method = RequestMethod.GET)
+    @GetMapping(value = "/flightDetails")
     public CompletableFuture<ResponseEntity<List<Document>>> retrievePassengerDetails(@RequestParam(value = "date") final String date,
                                                                                       @RequestParam(value = "fltNumber") final String flightNumber) {
         return CompletableFuture.supplyAsync(

@@ -2,7 +2,6 @@ package com.amadeus.ist.springrest.config.model;
 
 public class Error {
     private String errorMessage;
-    private int errorStatus;
 
     public Error(String errorMessage) {
         this.errorMessage = errorMessage;

@@ -3,6 +3,14 @@
 Concurrent REST API example using spring boot powered by MongoDB. 
 For learning purposes proper concurrency is being implemented.
 
+```
+## How to build
+$ docker build -p 8090:8090 -t spring_rest .
+
+## How to run
+$ docker run -t spring_rest
+```
+
 ## Functionalities
 -   Basic CRUD operations which are being consumed by an Angular application
 -   Retrieval of flight details and member enrollment
