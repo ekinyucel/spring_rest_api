@@ -27,7 +27,7 @@ class MemberController {
     }
 
     @Async
-    @RequestMapping(value = "/retrieveMembers", method = RequestMethod.GET)
+    @GetMapping(value = "/retrieveMembers")
     public CompletableFuture<ResponseEntity<List<Member>>> retrieveMembers() {
         long threadId = Thread.currentThread().getId();
         logger.info("Thread ID {} Request ID {} ", threadId, counter.incrementAndGet());
@@ -47,7 +47,7 @@ class MemberController {
     }
 
     @Async
-    @RequestMapping(value = "/retrieveMember/{flyerID}", method = RequestMethod.GET)
+    @GetMapping(value = "/retrieveMember/{flyerID}")
     public CompletableFuture<ResponseEntity<List<Member>>> retrieveMember(@PathVariable final String flyerID) {
         long threadId = Thread.currentThread().getId();
         logger.info(REQUEST_ID, counter.incrementAndGet());
@@ -110,7 +110,7 @@ class MemberController {
 
     @SuppressWarnings("Duplicates")
     @Async
-    @RequestMapping(value = "/deleteMember/{flyerID}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/deleteMember/{flyerID}")
     public CompletableFuture<ResponseEntity<Boolean>> deleteMember(@PathVariable final String flyerID) {
         long threadId = Thread.currentThread().getId();
         logger.info(REQUEST_ID, counter.incrementAndGet());

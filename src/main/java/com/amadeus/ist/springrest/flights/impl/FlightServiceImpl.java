@@ -10,12 +10,13 @@ import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
 class FlightServiceImpl implements FlightService {
-    private final String oollectionName = "full_passenger_list";
+    private final static String oollection = "full_passenger_list";
     private final List<Flight> flightList;
 
     private final MongoTemplate mongoTemplate;
@@ -40,7 +41,7 @@ class FlightServiceImpl implements FlightService {
             Aggregation aggregation = Aggregation.newAggregation(matchDate, matchFlightNumber, omittingFields);
             return aggregationResults(aggregation);
         }
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
@@ -52,9 +53,8 @@ class FlightServiceImpl implements FlightService {
         return aggregationResults(aggregation);
     }
 
-    public List<Document> aggregationResults(Aggregation aggregation) {
-        AggregationResults<Document> result = mongoTemplate.aggregate(aggregation, oollectionName, Document.class);
-        List<Document> document = result.getMappedResults();
-        return document;
+    private List<Document> aggregationResults(Aggregation aggregation) {
+        AggregationResults<Document> result = mongoTemplate.aggregate(aggregation, oollection, Document.class);
+        return result.getMappedResults();
     }
 }

@@ -9,13 +9,18 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
 class MemberServiceImpl implements MemberService {
+    private final Logger logger = Logger.getLogger(MemberServiceImpl.class.getName());
+
     private final List<Member> memberList;
     private Predicate<Member> searchPredicate;
 
@@ -42,12 +47,12 @@ class MemberServiceImpl implements MemberService {
                     .map(MemberDTO::toConvertMember)
                     .collect(Collectors.toList());
         }
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
     public boolean enrollMember(Member member) {
-        if (member.equals(null) || (member.getFlyerID().equals(null) && member.getName().equals(null)))
+        if (member == null || (member.getFlyerID().isEmpty() && member.getName().isEmpty()))
             return false;
         searchPredicate = m -> m.equals(member);
         if (!filter(memberList, searchPredicate).isEmpty())
@@ -59,7 +64,7 @@ class MemberServiceImpl implements MemberService {
 
     @Override
     public boolean updateMember(Member member) {
-        if (member.equals(null))
+        if (member == null)
             return false;
         searchPredicate = m -> m.getFlyerID().equals(member.getFlyerID());
         if (filter(memberList, searchPredicate) == null)
@@ -79,11 +84,8 @@ class MemberServiceImpl implements MemberService {
         query.addCriteria(Criteria.where("flyerID").is(flyerID));
 
         // TODO change the logic of checking whether member exist or not
-        // searchPredicate = member -> member.getFlyerID().equals(flyerID);
-        // if (filter(memberList, searchPredicate) == null)
-        //    return false;
 
-        System.out.println("test: deleteresult of removal - " + memberRepository.deleteMember(query));
+        logger.log(Level.WARNING, () -> "test: deleteresult of removal - " + memberRepository.deleteMember(query));
         memberRepository.deleteMember(query);
 
         return true;
