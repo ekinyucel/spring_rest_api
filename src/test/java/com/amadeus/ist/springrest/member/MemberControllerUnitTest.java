@@ -12,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.print.attribute.standard.Media;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
@@ -25,6 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class MemberControllerUnitTest {
     private final Logger logger = Logger.getLogger(MemberControllerUnitTest.class.getName());
 
+    private MemberDTO memberDTO;
+    private MemberDTO memberDTO2;
     private List<MemberDTO> memberDTOS;
 
     @Autowired
@@ -35,8 +39,8 @@ public class MemberControllerUnitTest {
 
     @Before
     public void initMocks() {
-        MemberDTO memberDTO = new MemberDTO(new ObjectId(), "1078546324578", "ekin","yucel",500,"AC");
-        MemberDTO memberDTO2 = new MemberDTO(new ObjectId(), "1097042349412", "john","doe",1500,"AC");
+        memberDTO = new MemberDTO(new ObjectId(), "1078546324578", "ekin","yucel",500,"AC");
+        memberDTO2 = new MemberDTO(new ObjectId(), "1097042349412", "john","doe",1500,"AC");
         memberDTOS = new CopyOnWriteArrayList<>();
         memberDTOS.add(memberDTO);
         memberDTOS.add(memberDTO2);
@@ -49,6 +53,21 @@ public class MemberControllerUnitTest {
             mockMvc.perform(get("/retrieveMembers")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk());
+        } catch (Exception ex) {
+            logger.info(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void returningSpecificMemberById() {
+        List<Member> member = new CopyOnWriteArrayList<>();
+        member.add(memberDTO2.toConvertMember());
+        Mockito.when(memberService.retrieveMember("1097042349412")).thenReturn(member);
+
+        try {
+            mockMvc.perform(get("/retrieveMember")
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound());
         } catch (Exception ex) {
             logger.info(ex.getMessage());
         }
