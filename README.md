@@ -1,4 +1,4 @@
-# Spring boot REST API
+# Spring boot REST API [![Build Status](http://139.59.147.2:8080/job/spring_rest_api/job/master/badge/icon)](http://139.59.147.2:8080/job/spring_rest_api/job/master/)
 
 Concurrent REST API example using spring boot powered by MongoDB. 
 For learning purposes proper concurrency is being implemented.
@@ -10,6 +10,8 @@ $ docker build -p 8090:8090 -t spring_rest .
 ## How to run
 $ docker run -t spring_rest
 ```
+
+
 
 ## Functionalities
 -   Basic CRUD operations which are being consumed by an Angular application

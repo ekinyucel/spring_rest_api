@@ -6,10 +6,11 @@ node {
 
     dir('spring-jenkins-pipeline') {
         stage("System configurations") {
+            sh "java -version"
             sh "mvn -version"
         }
-        /*stage("Build and analysis") {
+        stage("Build and analysis") {
             sh "mvn package spring-boot:repackage"
-        }*/
+        }
     }
 }
