@@ -65,9 +65,9 @@ public class MemberControllerUnitTest {
         Mockito.when(memberService.retrieveMember("1097042349412")).thenReturn(member);
 
         try {
-            mockMvc.perform(get("/retrieveMember")
+            mockMvc.perform(get("/retrieveMember/1097042349412")
                     .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isNotFound());
+                    .andExpect(status().isOk());
         } catch (Exception ex) {
             logger.info(ex.getMessage());
         }
