@@ -10,7 +10,7 @@ node {
             sh "mvn -version"
         }
         stage("Build and analysis") {
-            sh "mvn package spring-boot:repackage"
+            sh "mvn package spring-boot:repackage -X"
         }
     }
 }

@@ -1,4 +1,4 @@
-# Spring boot REST API [![Build Status](http://139.59.147.2:8080/job/spring_rest_api/job/master/badge/icon)](http://139.59.147.2:8080/job/spring_rest_api/job/master/)
+# Spring boot REST API
 
 Concurrent REST API example using spring boot powered by MongoDB. 
 For learning purposes proper concurrency is being implemented.
