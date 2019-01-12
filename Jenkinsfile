@@ -9,8 +9,8 @@ node {
         stage('Checkout') {
             git 'https://github.com/Broke116/spring_rest_api'
         }
-        /*stage("Build") {
-            sh "mvn clean test -X"
-        }*/
+        stage("Build") {
+            sh "mvn clean -DskipTests -X"
+        }
     }
 }
