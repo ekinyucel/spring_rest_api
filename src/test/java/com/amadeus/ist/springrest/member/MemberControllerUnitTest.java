@@ -1,6 +1,7 @@
 package com.amadeus.ist.springrest.member;
 
 import org.bson.types.ObjectId;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +31,7 @@ public class MemberControllerUnitTest {
     private MemberDTO memberDTO;
     private MemberDTO memberDTO2;
     private List<MemberDTO> memberDTOS;
+    private List<Member> memberList;
 
     @Autowired
     private MockMvc mockMvc; // powerful way of testing MVC controllers without starting full HTTP server
@@ -60,9 +62,9 @@ public class MemberControllerUnitTest {
 
     @Test
     public void returningSpecificMemberById() {
-        List<Member> member = new CopyOnWriteArrayList<>();
-        member.add(memberDTO2.toConvertMember());
-        Mockito.when(memberService.retrieveMember("1097042349412")).thenReturn(member);
+        memberList = new CopyOnWriteArrayList<>();
+        memberList.add(memberDTO2.toConvertMember());
+        Mockito.when(memberService.retrieveMember("1097042349412")).thenReturn(memberList);
 
         try {
             mockMvc.perform(get("/retrieveMember/1097042349412")

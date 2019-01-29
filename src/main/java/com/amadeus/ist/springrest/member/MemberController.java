@@ -80,7 +80,6 @@ class MemberController {
                 .thenApply(ResponseEntity::ok);
     }
 
-    @SuppressWarnings("Duplicates")
     @Async
     @PutMapping("/updateMember")
     public CompletableFuture<ResponseEntity<Boolean>> updateMember(@RequestBody Member member) {
@@ -108,7 +107,6 @@ class MemberController {
                 });
     }
 
-    @SuppressWarnings("Duplicates")
     @Async
     @DeleteMapping(value = "/deleteMember/{flyerID}")
     public CompletableFuture<ResponseEntity<Boolean>> deleteMember(@PathVariable final String flyerID) {

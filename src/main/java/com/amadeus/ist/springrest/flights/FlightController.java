@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -25,7 +26,9 @@ public class FlightController {
 
     @Async
     @GetMapping(value = "/flights")
-    public CompletableFuture<ResponseEntity<List<Document>>> retrieveFlights(@RequestParam(value = "date") final String date) {
+    public CompletableFuture<ResponseEntity<List<Document>>> retrieveFlights(@RequestParam(value = "date") final String date,
+                                                                             HttpServletRequest httpServletRequest) {
+        System.out.println("user ip " + httpServletRequest.getRequestURI()); // getting user id here
         return CompletableFuture.supplyAsync(
                 () -> flightService.retrieveFlightNumbers(date))
                 .handle((result, ex) -> {
