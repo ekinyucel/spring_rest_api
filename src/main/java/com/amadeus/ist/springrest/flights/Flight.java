@@ -117,10 +117,8 @@ public final class Flight {
     }
 
     public FlightDTO toConvertFlightDTO() {
-        FlightDTO memberDTO = new FlightDTO(new ObjectId(), this.fplSEQ, this.flightDate, this.flyerId, this.PNR, this.flightNumber
-                , this.flightClass, this.company, this.origin, this.destination, this.status);
-        return memberDTO;
-
+        return new FlightDTO(new ObjectId(), this.fplSEQ, this.flightDate, this.flyerId, this.PNR, this.flightNumber,
+                this.flightClass, this.company, this.origin, this.destination, this.status);
     }
 
     @JsonPOJOBuilder(buildMethodName = "build", withPrefix = "set")

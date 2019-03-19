@@ -17,9 +17,9 @@ public class SpringRestApplication {
     @Bean(name = "threadPoolExecutor")
     public TaskExecutor taskExecutor() { // specific method name Spring will search for
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(5);
+		executor.setCorePoolSize(10);
         executor.setMaxPoolSize(10);
-		executor.setQueueCapacity(500);
+		executor.setQueueCapacity(500); // set the capacity for the BlockingQueue of spring. it is a thread safe data structure.
         executor.setKeepAliveSeconds(10000);
 		executor.setThreadNamePrefix("concurrentRest-");
 		executor.initialize();
